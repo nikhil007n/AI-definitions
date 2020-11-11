@@ -1,0 +1,67 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import multiprocessing as mp
+
+def convolution(image, filter):
+    empty = np.zeros((image_size-2, image_size-2))
+    dot_1 = 0
+    for j in range(26):
+     for i in range(26):
+         for l in range(filter.shape[0]):
+             for k in range(filter.shape[1]):
+                 dot_1 = dot_1 + image[i+l, j+k]*filter[l, k]
+                 if k==filter.shape[1]-1 and l==filter.shape[0]-1:
+                     empty[i,j] = dot_1
+    return(empty)
+
+def maxpool(convol, pool):
+    empty = np.zeros((24, 24))         
+    for j in range(0, 24):                                  #stride of 2 horizontally
+     for i in range(0, 24):                                 #stride of 2 vertically
+         #dot_1 = 0
+         for l in range(pool):
+             for k in range(pool):
+                 pooling = np.zeros((2,2))
+                 pooling[l,k] = convol[i+l, j+k]
+                 
+         empty[i, j] = np.max(pooling)        
+          
+                 #if dot_1 < convol[i+l, j+k]:
+                     #dot_1 =  convol[i+l, j+k]*filter[l, k]
+                 #if k==pool.shape[1]-1 and l==pool.shape[0]-1:
+                     #empty[i,j] = dot_1
+    return(empty)
+
+def ReLUactivation(input):
+     for i,v in enumerate(input):
+         if v<0:
+             input[i]=0
+     return(input)
+
+def softmax(x):                                          #Use np.float64 for input
+  e_x = np.exp(x) 
+  return e_x / e_x.sum(axis=0)
+
+def meansquaredcost(prob, hotoneempty, train_labels, i):
+ outputcost=0
+ cost1 = 0
+ for j in range(prob.shape[0]):
+  outputcost = np.sum((prob-hotoneempty[j])**2)/(10) 
+ return outputcost
+
+  #hotone representation of labels
+def hotone(train_labels):
+ hotoneempty = np.zeros(shape = (train_labels.shape[0],10))
+ for i in range(train_labels.shape[0]):
+  lol = int(train_labels[i, 0])
+  hotoneempty[i, lol] = 1
+  
+  return hotoneempty
+
+def forward1(input, weights, biases):   #make sure input, weights and biases are all numpy arrays
+ neuron_no = len(input)
+ output = weights @ input
+ output1 = output + biases
+ return output1
+
+def img_hori_flip
