@@ -42,6 +42,9 @@ def softmax(x):                                          #Use np.float64 for inp
   e_x = np.exp(x) 
   return e_x / e_x.sum(axis=0)
 
+def sigmoid(x):
+    return 1/(1+np.exp(-x))
+
 def meansquaredcost(prob, hotoneempty, train_labels, i):
  outputcost=0
  cost1 = 0
@@ -64,4 +67,20 @@ def forward1(input, weights, biases):   #make sure input, weights and biases are
  output1 = output + biases
  return output1
 
-def img_hori_flip
+def img_diag_flip(input):
+    input1 = np.asarray(input)
+    return input1.T
+
+def img_hori_flip(img_training):
+    input1 = np.zeros((img_training.shape[0], img_training.shape[1]))
+    for i in range(img_training.shape[0]):
+        for j in range(img_training.shape[1]):
+            input1[-i-1, j] = img_training[i, j]
+    return input1
+
+def img_vert_flip(img_training):
+    input1 = np.zeros((img_training.shape[0], img_training.shape[1]))
+    for i in range(img_training.shape[0]):
+        for j in range(img_training.shape[1]):
+            input1[i, -j-1] = img_training[i, j]
+    return input1
